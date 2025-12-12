@@ -4,19 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trân Trọng Kính Mời - Phạm Trung Đức & Trịnh Thị Hà My</title>
-    <!-- Tải Tailwind CSS -->
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Cấu hình Font và Màu sắc -->
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@100..900&display=swap');
         
         :root {
-            /* Màu nền xanh/rêu */
-            --color-primary: #AAB895; 
-            /* Màu chữ/accent (Xanh Rêu Đậm) */
-            --color-secondary: #4E5848; 
-            /* Màu giấy (off-white) */
-            --color-paper: #F7F7F0; 
+            --color-primary: #AAB895;
+            --color-secondary: #4E5848;
+            --color-paper: #F7F7F0;
         }
 
         body {
@@ -26,22 +24,21 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 10px; 
-            overflow-x: hidden; 
+            padding: 10px;
+            overflow-x: hidden;
         }
 
         .card-container {
-            width: 90vw; 
-            max-width: 400px; 
+            width: 90vw;
+            max-width: 400px;
             aspect-ratio: 3 / 5;
-            max-height: 90vh; 
+            max-height: 90vh;
             height: auto;
-            
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-radius: 12px;
             position: relative;
             overflow: hidden;
-            border-radius: 12px;
-            margin: auto; 
+            margin: auto;
         }
 
         .card-page {
@@ -50,13 +47,13 @@
             position: absolute;
             top: 0;
             left: 0;
-            transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out; 
+            padding: 20px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            padding: 20px; 
-            box-sizing: border-box;
+            opacity: 1;
+            transition: transform 0.6s ease, opacity 0.6s ease;
             color: var(--color-secondary);
         }
 
@@ -67,83 +64,68 @@
 
         #page-1 {
             background-color: var(--color-primary);
-            z-index: 3;
             transform: translateX(0);
+            z-index: 3;
             position: relative;
             overflow: hidden;
         }
 
         #page-2 {
             background-color: var(--color-paper);
-            z-index: 2;
             transform: translateX(100%);
+            z-index: 2;
         }
 
         #page-3 {
             background-color: var(--color-paper);
-            z-index: 1;
-            padding: 15px 20px; 
             transform: translateX(200%);
-            overflow-y: auto; 
-            -webkit-overflow-scrolling: touch; 
+            z-index: 1;
+            padding: 15px 20px;
+            overflow-y: auto;
         }
-        
+
         .visible {
             transform: translateX(0) !important;
             opacity: 1 !important;
         }
-        
-        /* Font cho tiêu đề */
+
         .title-font {
             font-family: 'Playfair Display', serif;
         }
 
-        /* --- CSS TẠO HOA TRANG TRÍ ĐẦU THIỆP --- */
         .floral-header {
             position: absolute;
             top: 0;
             left: 50%;
             transform: translateX(-50%);
             width: 100%;
-            max-width: 250px; 
+            max-width: 250px;
             height: 40px;
-            z-index: 4; 
-            overflow: hidden;
+            z-index: 4;
+        }
+
+        .flower-placeholder {
+            width: 120px;
+            height: 120px;
+            margin: 20px auto;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        .floral-svg {
-            width: 100%;
-            height: 100%;
-        }
-        
-        .flower-placeholder {
-            width: 120px; 
-            height: 120px;
-            margin: 20px auto; 
-            display: flex; 
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* --- CSS CHO CÁNH HOA RƠI (GHIBLI EFFECT) --- */
+        /* Petal animation */
         .petal {
             position: absolute;
-            top: -10%; 
-            background-color: #F8F8F8; 
+            top: -10%;
             border-radius: 50%;
             opacity: 0.8;
-            pointer-events: none; 
-            animation: fall linear infinite, drift alternate ease-in-out infinite;
-            box-shadow: 0 0 5px rgba(255, 255, 255, 0.4);
-            z-index: 0; 
+            pointer-events: none;
+            animation: fall linear infinite, drift ease-in-out infinite alternate;
         }
 
         @keyframes fall {
             to {
-                transform: translateY(110vh) rotate(500deg); 
+                transform: translateY(110vh) rotate(500deg);
             }
         }
 
@@ -155,19 +137,12 @@
         .next-button {
             background-color: var(--color-secondary);
             color: var(--color-paper);
-            padding: 12px 24px; 
+            padding: 12px 24px;
             border-radius: 9999px;
             cursor: pointer;
-            transition: background-color 0.3s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            min-width: 150px; 
-            z-index: 10; 
+            transition: 0.3s;
+            min-width: 150px;
         }
-        
-        .submit-button {
-            padding: 12px; 
-        }
-
         .next-button:hover {
             background-color: #3B443A;
         }
@@ -175,7 +150,6 @@
         .animate-fade-in {
             animation: fadeIn 1s ease-out forwards;
             opacity: 0;
-            z-index: 10; 
         }
 
         @keyframes fadeIn {
@@ -183,58 +157,527 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .date-main {
-             font-size: 5rem; 
-             line-height: 1;
-        }
-        .date-sub {
-            font-size: 1.5rem; 
-        }
-
         .back-button {
             background-color: transparent;
             border: 1px solid var(--color-secondary);
             color: var(--color-secondary);
-            box-shadow: none;
-            z-index: 10;
         }
-
-        .back-button:hover {
-            background-color: var(--color-paper);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        @media (min-width: 380px) {
-            .date-main {
-                font-size: 7rem; 
-            }
-            .date-sub {
-                font-size: 2.25rem; 
-            }
-        }
-        
-        .rsvp-button {
-            min-width: unset; 
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-        }
-
-        .rsvp-button.back-button {
-            color: var(--color-secondary);
-            background-color: var(--color-paper);
-            border: 1px solid var(--color-secondary);
-        }
-        
     </style>
 </head>
 <body>
 
 <div class="card-container">
-    <div class="floral-header animate-fade-in" style="animation-delay: 0.1s;">
-        <svg class="floral-svg" viewBox="0 0 250 40" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="var(--color-secondary)" stroke-width="0.8">
-            <path d="M5 20 L30 20 C40 20, 45 10, 55 10 C65 10, 70 20, 80 20" stroke-linecap="round"/>
+
+    <!-- HOA TRANG TRÍ ĐẦU THIỆP -->
+    <div class="floral-header animate-fade-in" style="animation-delay:0.1s;">
+        <svg class="floral-svg" viewBox="0 0 250 40" xmlns="http://www.w3.org/2000/svg"
+            fill="none" stroke="var(--color-secondary)" stroke-width="0.8">
+            
+            <!-- Left branch -->
+            <path d="M5 20 L30 20 C40 20,45 10,55 10 C65 10,70 20,80 20" stroke-linecap="round"/>
             <circle cx="50" cy="10" r="2" fill="var(--color-primary)" stroke="none"/>
             <circle cx="65" cy="15" r="1.5" fill="var(--color-secondary)" stroke="none"/>
-            
-            <path d="M245 20 L220 20 C210 20, 205
+
+            <!-- Right branch -->
+            <path d="M245 20 L220 20 C210 20,205 10,195 10 C185 10,180 20,170 20" stroke-linecap="round"/>
+            <circle cx="200" cy="10" r="2" fill="var(--color-primary)" stroke="none"/>
+            <circle cx="185" cy="15" r="1.5" fill="var(--color-secondary)" stroke="none"/>
+
+            <!-- Arch -->
+            <path d="M80 20 C100 0,150 0,170 20" stroke-width="0.5" stroke-dasharray="3 3"/>
+        </svg>
+    </div>
+
+    <!-- Loading overlay for RSVP -->
+    <div class="absolute inset-0 z-40 bg-white/70 backdrop-blur-sm transition-opacity duration-500 hidden" id="loading-overlay">
+        <div class="flex items-center justify-center h-full flex-col">
+            <svg class="animate-spin h-8 w-8 text-gray-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" class="opacity-25"></circle>
+                <path class="opacity-75" fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.4 0 0 5.4 0 12h4z"/>
+            </svg>
+            <p class="mt-2 text-sm text-gray-800 font-medium">Đang gửi phản hồi...</p>
+        </div>
+    </div>
+
+    <!-- PAGE 1 -->
+    <div id="page-1" class="card-page visible justify-around text-center">
+
+        <h1 class="title-font text-3xl animate-fade-in mt-10" style="animation-delay:0.5s;">
+            Wedding Invitation
+        </h1>
+
+        <!-- Ảnh tròn -->
+        <div class="flower-placeholder animate-fade-in border-4 border-dashed border-white/50 rounded-full overflow-hidden"
+            style="animation-delay:1s;">
+            <img src="https://placehold.co/120x120/AAB895/4E5848?text=Ảnh+Hoa"
+                 class="w-full h-full object-cover opacity-80">
+        </div>
+
+        <div class="mt-auto mb-10 animate-fade-in" style="animation-delay:1.5s;">
+            <p class="title-font text-xl tracking-widest">TRÂN TRỌNG KÍNH MỜI</p>
+            <h2 id="guest-name" class="title-font text-4xl mt-1 font-semibold text-white"
+                style="text-shadow:1px 1px 3px var(--color-secondary);">
+                Bạn & Người thân
+            </h2>
+        </div>
+
+        <p class="text-xs italic mt-auto w-full text-center p-2 bg-black/10 rounded-lg animate-fade-in"
+            style="animation-delay:2s;">
+            <code class="font-mono text-sm text-gray-800 bg-white/50 px-2 py-0.5 rounded shadow-sm block">
+                cout << "nothing to fear, love is here, together we cheer";
+            </code>
+        </p>
+
+        <button onclick="nextPage()" class="next-button mt-4 animate-fade-in" style="animation-delay:2.5s;">
+            Mở Thiệp >
+        </button>
+    </div>
+    <!-- PAGE 2 -->
+    <div id="page-2" class="card-page hidden justify-between text-center">
+
+        <div class="w-full text-right title-font text-lg font-light text-gray-500">
+            Lời mời
+        </div>
+
+        <div class="flex flex-col items-center justify-center h-full">
+
+            <!-- Ngày tháng -->
+            <div class="title-font font-bold flex items-center justify-center relative my-4 animate-fade-in">
+                <span class="date-sub absolute top-0 right-0 translate-x-1/2 text-right"
+                      style="animation-delay:0.3s;">Jan</span>
+
+                <span class="date-main title-font" style="color:var(--color-primary);animation-delay:0.1s;">
+                    28
+                </span>
+            </div>
+
+            <!-- Ảnh cặp đôi placeholder -->
+            <div class="my-8 w-full max-w-[200px] h-[150px] flex items-center justify-center
+                        border-dashed border-2 border-gray-300 rounded-xl bg-gray-50/50 animate-fade-in"
+                 style="animation-delay:0.6s;">
+                <p class="text-sm text-gray-400">Họa tiết Cặp đôi (SVG Placeholder)</p>
+            </div>
+
+            <h3 class="text-2xl title-font font-light tracking-widest mt-4 animate-fade-in"
+                style="animation-delay:0.9s;">
+                SAVE THE DATE
+            </h3>
+
+            <p class="text-sm tracking-wide mt-1 animate-fade-in" style="animation-delay:1.1s;">
+                OUR WEDDING DAY
+            </p>
+        </div>
+
+        <button onclick="nextPage()" class="next-button mt-auto animate-fade-in"
+                style="animation-delay:1.5s;">
+            Xem Chi Tiết >
+        </button>
+    </div>
+
+                        <!-- PAGE 3 -->
+    <div id="page-3" class="card-page hidden justify-start items-start text-left">
+
+        <div class="w-full title-font text-lg font-light text-gray-500 mb-4 text-right">
+            Thông tin & RSVP
+        </div>
+
+        <!-- Tên cô dâu chú rể -->
+        <div class="w-full text-center mb-6">
+            <h2 class="title-font text-2xl font-semibold animate-fade-in"
+                style="animation-delay:0.5s;">
+                PHẠM TRUNG ĐỨC
+            </h2>
+
+            <h2 class="title-font text-2xl font-semibold mb-2 animate-fade-in"
+                style="animation-delay:0.7s;">
+                & TRỊNH THỊ HÀ MY
+            </h2>
+
+            <div class="animate-fade-in" style="animation-delay:0.3s;">
+                <p class="title-font text-sm font-light text-gray-700">Gia đình Ông Bà:</p>
+            </div>
+
+            <div class="animate-fade-in" style="animation-delay:0.3s;">
+                <p class="title-font text-sm font-light text-gray-700">
+                    Phạm Quang Trung & Võ Thị Thu Huyền
+                </p>
+            </div>
+
+            <div class="animate-fade-in" style="animation-delay:0.9s;">
+                <p class="title-font text-sm font-light text-gray-700">
+                    Trịnh Quốc Khánh & Đàm Thị Lan
+                </p>
+            </div>
+        </div>
+
+        <!-- Box kính mời -->
+        <div class="w-full mb-6 animate-fade-in p-4 rounded-xl border-2 shadow-sm text-center"
+             style="animation-delay:1.3s;background-color:var(--color-paper);border-color:var(--color-primary);">
+
+            <p class="title-font text-base font-semibold mb-2" style="color:var(--color-secondary);">
+                Trân trọng kính mời Quý vị:
+            </p>
+
+            <div class="text-sm font-light leading-relaxed" style="color:var(--color-secondary);">
+                <p class="font-medium text-lg title-font">
+                    TỚI DỰ TIỆC THÀNH HÔN CÙNG GIA ĐÌNH CHÚNG TÔI
+                </p>
+
+                <div class="h-0.5 w-1/3 mx-auto my-3 opacity-80"
+                     style="background-color:var(--color-primary);"></div>
+
+                <p class="mt-2 text-base">
+                    Thứ Tư, 28.01.2026 (10.12.Ất Tỵ)
+                </p>
+
+                <p class="mt-1 font-semibold">
+                    Địa điểm: KHÁCH SẠN MELIÁ HÀ NỘI
+                </p>
+            </div>
+        </div>
+
+        <!-- MAP -->
+        <div class="w-full h-24 border border-gray-300 bg-gray-100 rounded-lg
+                    flex items-center justify-center mb-6 animate-fade-in"
+             style="animation-delay:0.1s;">
+            <p class="text-xs text-gray-400">Bản đồ (Map Placeholder)</p>
+        </div>
+
+        <!-- TIMELINE -->
+        <h3 class="title-font text-xl font-medium mb-2 animate-fade-in"
+            style="animation-delay:1.5s;">Timeline</h3>
+
+        <ul class="text-sm w-full mb-6 space-y-1 animate-fade-in"
+            style="animation-delay:1.7s;">
+            <li><span class="font-bold">10:00 AM:</span> Tiệc vows | KiKi Vows</li>
+            <li><span class="font-bold">11:00 AM:</span> Đón khách | Spirited Arrival</li>
+            <li><span class="font-bold">11:450 AM:</span> Lễ | Howl’s Promise</li>
+            <li><span class="font-bold">12:00 PM:</span> Khai tiệc | Whisper Feast</li>
+            <li><span class="font-bold">13:30 PM:</span> Kết thúc | Totoro Farewell</li>
+        </ul>
+
+        <!-- RSVP FORM -->
+        <div class="w-full pt-2">
+            <h3 class="title-font text-xl font-medium mb-4 text-center animate-fade-in"
+                style="animation-delay:1.9s;">
+                Xác Nhận Tham Dự (RSVP)
+            </h3>
+
+            <form id="rsvp-form" class="space-y-4 animate-fade-in"
+                  style="animation-delay:2.1s;">
+
+                <!-- Hidden fields -->
+                <input type="hidden" id="rsvp-guest-name">
+                <input type="hidden" id="attendance-status" value="">
+                <input type="hidden" id="guest-count-hidden" value="0">
+
+                <!-- Attendance buttons -->
+                <div id="attendance-buttons" class="flex justify-around space-x-4">
+                    <button type="button" data-attendance="Tham du"
+                            class="rsvp-button next-button flex-1 shadow-lg transition duration-300">
+                        Tham dự
+                    </button>
+
+                    <button type="button" data-attendance="Khong tham du"
+                            class="rsvp-button back-button flex-1 shadow-lg transition duration-300">
+                        Tiếc quá
+                    </button>
+                </div>
+
+                <!-- Guest count -->
+                <div id="guest-count-section"
+                     class="space-y-2 hidden pt-2 border-t border-gray-200">
+
+                    <label class="block text-sm font-medium">
+                        Số lượng khách đi cùng (bao gồm cả bạn):
+                    </label>
+
+                    <select id="guest-count-visible" class="w-full p-2 border rounded-lg">
+                        <option value="1">1 khách (Chỉ mình tôi)</option>
+                        <option value="2">2 khách</option>
+                        <option value="3">3 khách</option>
+                        <option value="4">4 khách</option>
+                        <option value="5">5 khách</option>
+                    </select>
+
+                    <button type="submit"
+                            class="submit-button next-button w-full p-3 rounded-lg shadow-md mt-4">
+                        Gửi Xác Nhận Tham Dự
+                    </button>
+                </div>
+
+                <div id="rsvp-message"
+                     class="text-center mt-2 text-sm font-semibold hidden"></div>
+            </form>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="w-full text-center mt-8 pt-4 border-t border-gray-200 animate-fade-in"
+             style="animation-delay:2.3s;">
+
+            <p class="title-font text-xl font-medium mb-3">
+                Xin chân thành cảm ơn!
+            </p>
+
+            <p class="text-xs italic text-gray-500 mb-4">
+                Sự hiện diện của Quý vị là món quà quý giá nhất.<br>
+                Chúng con để lại QR nếu Quý vị cần ở đây ạ.
+            </p>
+
+            <!-- QR -->
+            <div class="w-32 h-32 mx-auto bg-gray-200 border-2 border-gray-300 rounded-lg
+                        flex items-center justify-center mb-4">
+                <span class="text-xs text-gray-500">QR Chuyển Tiền (Placeholder)</span>
+            </div>
+        </div>
+
+        <button onclick="prevPage()" class="next-button back-button w-full p-2 mt-auto">
+            < Quay lại Trang Bìa
+        </button>
+
+    </div> <!-- END PAGE 3 -->
+</div> <!-- END CARD CONTAINER -->
+
+        <script>
+            const GUEST_NAME_ID = 'guest-name';
+        
+            // Lấy tên khách từ URL ?to=
+            function getGuestNameFromUrl() {
+                const urlParams = new URLSearchParams(window.location.search);
+                let name = urlParams.get('to');
+                if (name) {
+                    name = decodeURIComponent(name.replace(/\+/g, ' '));
+                }
+                return name || "Bạn & Người thân";
+            }
+        
+            // Cá nhân hóa thiệp
+            function personalizeCard() {
+                const guestName = getGuestNameFromUrl();
+        
+                const nameElement = document.getElementById(GUEST_NAME_ID);
+                if (nameElement) nameElement.textContent = guestName;
+        
+                const rsvpNameInput = document.getElementById('rsvp-guest-name');
+                if (rsvpNameInput) rsvpNameInput.value = guestName;
+        
+                // Ghi lại thời điểm họ mở thiệp
+                window.lastOpenedTimestamp = new Date().toISOString();
+            }
+        
+            // --------------------
+            // Chuyển trang
+            // --------------------
+            let currentPage = 1;
+            const totalPages = 3;
+        
+            const pages = {
+                1: document.getElementById('page-1'),
+                2: document.getElementById('page-2'),
+                3: document.getElementById('page-3'),
+            };
+        
+            function updatePageVisibility() {
+                for (let i = 1; i <= totalPages; i++) {
+                    const page = pages[i];
+                    if (i === currentPage) {
+                        page.classList.remove('hidden');
+                        setTimeout(() => page.classList.add('visible'), 20);
+                    } else {
+                        page.classList.remove('visible');
+                        setTimeout(() => page.classList.add('hidden'), 600);
+        
+                        // Reset vị trí slide
+                        if (i < currentPage) page.style.transform = "translateX(-100%)";
+                        else page.style.transform = "translateX(200%)";
+                    }
+                }
+        
+                if (currentPage === 3) {
+                    pages[3].scrollTop = 0;
+                }
+            }
+        
+            function nextPage() {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    updatePageVisibility();
+                }
+            }
+        
+            function prevPage() {
+                if (currentPage === 3) currentPage = 1;
+                else if (currentPage > 1) currentPage--;
+                updatePageVisibility();
+            }
+        
+            // --------------------
+            // Tạo hiệu ứng hoa rơi (Ghibli)
+            // --------------------
+            function createPetals() {
+                const page1 = document.getElementById('page-1');
+                const number = 40;
+                const colors = ['#F8F8F8', '#FFF0F5', '#EEDDEE'];
+        
+                for (let i = 0; i < number; i++) {
+                    const petal = document.createElement('div');
+                    petal.classList.add('petal');
+        
+                    const size = Math.random() * 6 + 3;
+                    petal.style.width = size + "px";
+                    petal.style.height = size + "px";
+        
+                    petal.style.left = Math.random() * 100 + "%";
+        
+                    petal.style.animationDelay = (Math.random() * 5) + "s, " + (Math.random() * 5) + "s";
+                    petal.style.animationDuration = (Math.random() * 10 + 10) + "s, " + (Math.random() * 3 + 5) + "s";
+        
+                    petal.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    petal.style.transform = `rotate(${Math.random() * 360}deg)`;
+        
+                    page1.appendChild(petal);
+                }
+            }
+        
+            document.addEventListener('DOMContentLoaded', () => {
+                personalizeCard();
+                updatePageVisibility();
+                createPetals();
+        
+                const form = document.getElementById('rsvp-form');
+                const loading = document.getElementById('loading-overlay');
+                const messageBox = document.getElementById('rsvp-message');
+        
+                const attendanceButtons = document.getElementById('attendance-buttons');
+                const guestCountSection = document.getElementById('guest-count-section');
+        
+                const attendanceStatusInput = document.getElementById('attendance-status');
+                const guestCountVisibleSelect = document.getElementById('guest-count-visible');
+                const guestCountHiddenInput = document.getElementById('guest-count-hidden');
+        
+                const rsvpButtons = attendanceButtons.querySelectorAll('.rsvp-button');
+        
+                // Show / hide loading
+                const showLoading = (show) => {
+                    if (show) {
+                        loading.classList.remove('hidden');
+                        loading.classList.add('flex');
+                    } else {
+                        loading.classList.add('hidden');
+                        loading.classList.remove('flex');
+                    }
+                };
+        
+                // Show confirmation message
+                const showResponseMessage = (msg, success = true) => {
+                    messageBox.textContent = msg;
+                    messageBox.classList.remove('hidden');
+                    messageBox.classList.toggle('text-green-600', success);
+                    messageBox.classList.toggle('text-red-600', !success);
+                };
+        
+                // Attendance button logic
+                rsvpButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const status = button.dataset.attendance;
+                        attendanceStatusInput.value = status;
+        
+                        // Reset styling
+                        rsvpButtons.forEach(btn => {
+                            btn.classList.remove(
+                                'bg-green-100','border-green-600','text-green-800',
+                                'bg-red-100','border-red-600','text-red-800','shadow-none'
+                            );
+                            btn.classList.add('next-button');
+                        });
+        
+                        if (status === "Tham du") {
+                            // Style selected
+                            button.classList.remove('next-button');
+                            button.classList.add('bg-green-100','border','border-green-600','text-green-800','shadow-none');
+        
+                            // Show guest count
+                            guestCountSection.classList.remove('hidden');
+                            guestCountHiddenInput.value = guestCountVisibleSelect.value;
+                        }
+                        else {
+                            // Không tham dự
+                            button.classList.remove('next-button');
+                            button.classList.add('bg-red-100','border','border-red-600','text-red-800','shadow-none');
+        
+                            guestCountSection.classList.add('hidden');
+                            guestCountHiddenInput.value = "0";
+        
+                            // auto submit
+                            form.dispatchEvent(new Event('submit'));
+                        }
+                    });
+                });
+        
+                // When guest count changes
+                guestCountVisibleSelect.addEventListener('change', () => {
+                    guestCountHiddenInput.value = guestCountVisibleSelect.value;
+                });
+        
+                // --------------------------
+                // SUBMIT FORM → APPS SCRIPT
+                // --------------------------
+                form.addEventListener('submit', async e => {
+                    e.preventDefault();
+        
+                    if (!attendanceStatusInput.value) {
+                        showResponseMessage("Vui lòng chọn Tham dự hoặc Tiếc quá.", false);
+                        return;
+                    }
+        
+                    showLoading(true);
+                    messageBox.classList.add('hidden');
+        
+                    const guestName = document.getElementById('rsvp-guest-name').value;
+                    const attending = attendanceStatusInput.value;
+                    const quantity = guestCountHiddenInput.value;
+                    const lastOpened = window.lastOpenedTimestamp;
+                    const timestampSubmit = new Date().toISOString();
+        
+                    // JSON gửi về Apps Script
+                    const payload = {
+                        name: guestName,
+                        attending,
+                        quantity: Number(quantity),
+                        lastOpened,
+                        timestampSubmit
+                    };
+        
+                    try {
+                        await fetch(
+                            "https://script.google.com/macros/s/AKfycbyOUDyB_uoIuc9UyADgdKhwABJ4d2tPZiJ5ZDq-sPPahTosXnr2IbzXsGHteWvSu_qr/exec",
+                            {
+                                method: "POST",
+                                body: JSON.stringify(payload),
+                                headers: { "Content-Type": "application/json" }
+                            }
+                        );
+        
+                        showResponseMessage("Xác nhận của bạn đã được gửi thành công!", true);
+        
+                        setTimeout(() => {
+                            currentPage = 1;
+                            updatePageVisibility();
+                            form.reset();
+                            attendanceStatusInput.value = "";
+                            guestCountHiddenInput.value = "0";
+                            guestCountSection.classList.add('hidden');
+                        }, 2500);
+        
+                    } catch (err) {
+                        console.error(err);
+                        showResponseMessage("Có lỗi xảy ra. Vui lòng thử lại.", false);
+                    }
+        
+                    showLoading(false);
+                });
+            });
+        </script>
+    </body>
+</html>
