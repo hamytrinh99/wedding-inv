@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to our wedding - Phạm Trung Đức & Trịnh Thị Hà My</title>
-
-    <!-- Tailwind -->
+    <title>Trân Trọng Kính Mời - Phạm Trung Đức & Trịnh Thị Hà My</title>
+    <!-- Tải Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Fonts & Colors -->
+    <!-- Cấu hình Font và Màu sắc -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@100..900&display=swap');
-
+        
         :root {
-            --color-primary: #AAB895;
-            --color-secondary: #4E5848;
-            --color-paper: #F7F7F0;
+            /* Màu nền xanh/rêu */
+            --color-primary: #AAB895; 
+            /* Màu chữ/accent (Xanh Rêu Đậm) */
+            --color-secondary: #4E5848; 
+            /* Màu giấy (off-white) */
+            --color-paper: #F7F7F0; 
         }
 
         body {
@@ -25,20 +26,22 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 10px;
-            overflow-x: hidden;
+            padding: 10px; 
+            overflow-x: hidden; 
         }
 
         .card-container {
-            width: 90vw;
-            max-width: 400px;
-            aspect-ratio: 3/5;
-            max-height: 90vh;
+            width: 90vw; 
+            max-width: 400px; 
+            aspect-ratio: 3 / 5;
+            max-height: 90vh; 
             height: auto;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             position: relative;
             overflow: hidden;
             border-radius: 12px;
+            margin: auto; 
         }
 
         .card-page {
@@ -47,284 +50,191 @@
             position: absolute;
             top: 0;
             left: 0;
-            transition: transform .6s ease-in-out, opacity .6s ease-in-out;
+            transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out; 
             display: flex;
             flex-direction: column;
-            padding: 20px;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px; 
             box-sizing: border-box;
             color: var(--color-secondary);
         }
 
-        .card-page.hidden { opacity: 0; pointer-events: none; }
-        .visible { transform: translateX(0)!important; opacity: 1!important; }
+        .card-page.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
 
-        #page-1 { background: var(--color-primary); z-index: 3; }
-        #page-2 { background: var(--color-paper); transform: translateX(100%); z-index: 2; }
-        #page-3 { background: var(--color-paper); transform: translateX(200%); z-index: 1; overflow-y: auto; }
+        #page-1 {
+            background-color: var(--color-primary);
+            z-index: 3;
+            transform: translateX(0);
+            position: relative;
+            overflow: hidden;
+        }
 
-        .title-font { font-family: 'Playfair Display', serif; }
+        #page-2 {
+            background-color: var(--color-paper);
+            z-index: 2;
+            transform: translateX(100%);
+        }
+
+        #page-3 {
+            background-color: var(--color-paper);
+            z-index: 1;
+            padding: 15px 20px; 
+            transform: translateX(200%);
+            overflow-y: auto; 
+            -webkit-overflow-scrolling: touch; 
+        }
+        
+        .visible {
+            transform: translateX(0) !important;
+            opacity: 1 !important;
+        }
+        
+        /* Font cho tiêu đề */
+        .title-font {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* --- CSS TẠO HOA TRANG TRÍ ĐẦU THIỆP --- */
+        .floral-header {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 250px; 
+            height: 40px;
+            z-index: 4; 
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .floral-svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .flower-placeholder {
+            width: 120px; 
+            height: 120px;
+            margin: 20px auto; 
+            display: flex; 
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- CSS CHO CÁNH HOA RƠI (GHIBLI EFFECT) --- */
+        .petal {
+            position: absolute;
+            top: -10%; 
+            background-color: #F8F8F8; 
+            border-radius: 50%;
+            opacity: 0.8;
+            pointer-events: none; 
+            animation: fall linear infinite, drift alternate ease-in-out infinite;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.4);
+            z-index: 0; 
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(500deg); 
+            }
+        }
+
+        @keyframes drift {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(20px); }
+        }
 
         .next-button {
             background-color: var(--color-secondary);
             color: var(--color-paper);
-            padding: 12px 24px;
-            border-radius: 999px;
+            padding: 12px 24px; 
+            border-radius: 9999px;
             cursor: pointer;
-            transition: 0.2s;
-            text-align: center;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            min-width: 150px; 
+            z-index: 10; 
+        }
+        
+        .submit-button {
+            padding: 12px; 
+        }
+
+        .next-button:hover {
+            background-color: #3B443A;
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 1s ease-out forwards;
+            opacity: 0;
+            z-index: 10; 
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .date-main {
+             font-size: 5rem; 
+             line-height: 1;
+        }
+        .date-sub {
+            font-size: 1.5rem; 
         }
 
         .back-button {
-            background: transparent;
+            background-color: transparent;
             border: 1px solid var(--color-secondary);
             color: var(--color-secondary);
-            padding: 12px 24px;
-            border-radius: 999px;
+            box-shadow: none;
+            z-index: 10;
         }
 
-        /* Ghibli petals */
-        .petal {
-            position: absolute;
-            top: -10%;
-            background-color: #F8F8F8;
-            border-radius: 50%;
-            opacity: .8;
-            pointer-events: none;
-            animation: fall linear infinite, drift alternate ease-in-out infinite;
+        .back-button:hover {
+            background-color: var(--color-paper);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        @keyframes fall { to { transform: translateY(120vh) rotate(720deg); } }
-        @keyframes drift { to { transform: translateX(20px); } }
 
+        @media (min-width: 380px) {
+            .date-main {
+                font-size: 7rem; 
+            }
+            .date-sub {
+                font-size: 2.25rem; 
+            }
+        }
+        
+        .rsvp-button {
+            min-width: unset; 
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .rsvp-button.back-button {
+            color: var(--color-secondary);
+            background-color: var(--color-paper);
+            border: 1px solid var(--color-secondary);
+        }
+        
     </style>
 </head>
 <body>
 
 <div class="card-container">
-
-    <!-- PAGE 1 -->
-    <div id="page-1" class="card-page visible text-center">
-
-        <h1 class="title-font text-3xl mt-10 text-white">Wedding Invitation</h1>
-
-        <div class="flower-placeholder w-32 h-32 border-4 border-white/60 rounded-full overflow-hidden mt-4">
-            <img src="https://placehold.co/200x200" class="w-full h-full object-cover">
-        </div>
-
-        <div class="mt-auto mb-10">
-            <p class="title-font text-xl text-white">TRÂN TRỌNG KÍNH MỜI</p>
-            <h2 id="guest-name" class="title-font text-4xl mt-2 text-white">
-                Bạn & Người thân
-            </h2>
-        </div>
-
-        <button onclick="nextPage()" class="next-button mb-10">Mở thiệp ></button>
-    </div>
-
-
-    <!-- PAGE 2 -->
-    <div id="page-2" class="card-page hidden text-center">
-
-        <div class="w-full text-right title-font text-lg text-gray-500">Lời mời</div>
-
-        <div class="date-main title-font text-7xl" style="color:var(--color-primary)">28</div>
-        <div class="title-font text-2xl">SAVE THE DATE</div>
-
-        <button onclick="nextPage()" class="next-button mt-4">Xem chi tiết ></button>
-    </div>
-
-
-    <!-- PAGE 3 -->
-    <div id="page-3" class="card-page hidden text-left">
-
-        <div class="text-right w-full text-gray-500 title-font mb-4">Thông tin & RSVP</div>
-
-        <h2 class="title-font text-2xl font-semibold">PHẠM TRUNG ĐỨC & TRỊNH THỊ HÀ MY</h2>
-
-        <div class="my-4 text-center">
-            <p class="font-medium">Trân trọng kính mời Quý vị:</p>
-            <p class="mt-2 font-semibold">Tới dự tiệc thành hôn cùng gia đình chúng tôi</p>
-        </div>
-
-        <!-- RSVP -->
-        <h3 class="title-font text-xl text-center mt-4">Xác nhận tham dự (RSVP)</h3>
-
-        <form id="rsvp-form" class="w-full">
-
-            <input type="hidden" id="rsvp-guest-name">
-            <input type="hidden" id="attendance-status">
-            <input type="hidden" id="guest-count-hidden" value="0">
-
-            <div id="attendance-buttons" class="flex gap-4 my-2">
-                <button type="button" data-attendance="Tham du" class="next-button flex-1 rsvp-button">Tham dự</button>
-                <button type="button" data-attendance="Khong tham du" class="back-button flex-1 rsvp-button">Tiếc quá</button>
-            </div>
-
-            <div id="guest-count-section" class="hidden my-2">
-                <label>Số lượng khách:</label>
-                <select id="guest-count-visible" class="border p-2 w-full rounded">
-                    <option value="1">1 (chỉ mình tôi)</option>
-                    <option value="2">2 người</option>
-                    <option value="3">3 người</option>
-                </select>
-
-                <button type="submit" class="next-button w-full mt-3">
-                    Gửi xác nhận
-                </button>
-            </div>
-
-            <div id="rsvp-message" class="mt-2 text-center text-sm font-medium hidden"></div>
-
-        </form>
-
-        <button onclick="prevPage()" class="back-button w-full p-3 mt-auto">< Quay lại</button>
-    </div>
-
-</div>
-
-
-<script>
-/* --------------------------------------------------
-   YOUR SCRIPT URL
--------------------------------------------------- */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyOUDyB_uoIuc9UyADgdKhwABJ4d2tPZiJ5ZDq-sPPahTosXnr2IbzXsGHteWvSu_qr/exec";
-
-
-/* --------------------------------------------------
-   PERSONALIZE VIA URL
--------------------------------------------------- */
-function getGuestNameFromUrl() {
-    const p = new URLSearchParams(location.search).get("to");
-    return p ? decodeURIComponent(p.replace(/\+/g," ")) : "Bạn & Người thân";
-}
-
-document.getElementById("guest-name").textContent = getGuestNameFromUrl();
-document.getElementById("rsvp-guest-name").value = getGuestNameFromUrl();
-
-
-/* --------------------------------------------------
-   PAGE SLIDE
--------------------------------------------------- */
-let currentPage = 1;
-
-function updatePages() {
-    [1,2,3].forEach(id=>{
-        const page = document.getElementById(`page-${id}`);
-        if(id === currentPage){
-            page.classList.remove("hidden");
-            setTimeout(()=>page.classList.add("visible"),10);
-        }else{
-            page.classList.remove("visible");
-            setTimeout(()=>page.classList.add("hidden"),600);
-        }
-    });
-}
-
-function nextPage(){
-    if(currentPage < 3){ currentPage++; updatePages(); }
-}
-
-function prevPage(){
-    currentPage = 1;
-    updatePages();
-}
-
-
-/* --------------------------------------------------
-   GHIBLI PETALS
--------------------------------------------------- */
-function createPetals(){
-    const container = document.getElementById("page-1");
-    for(let i=0;i<35;i++){
-        const p = document.createElement("div");
-        p.className = "petal";
-        const size = Math.random()*6+4;
-        p.style.width = size+"px";
-        p.style.height = size+"px";
-        p.style.left = Math.random()*100+"%";
-        p.style.animationDelay = Math.random()*5+"s";
-        p.style.animationDuration = (10+Math.random()*12)+"s";
-        container.appendChild(p);
-    }
-}
-createPetals();
-
-
-/* --------------------------------------------------
-   RSVP → GOOGLE SHEET VIA APPS SCRIPT
--------------------------------------------------- */
-document.addEventListener("DOMContentLoaded", () => {
-
-    const form = document.getElementById("rsvp-form");
-    const msg = document.getElementById("rsvp-message");
-    const attendanceStatus = document.getElementById("attendance-status");
-    const guestCountSection = document.getElementById("guest-count-section");
-    const guestCountVisible = document.getElementById("guest-count-visible");
-    const guestCountHidden = document.getElementById("guest-count-hidden");
-
-    // Attendance buttons
-    document.querySelectorAll(".rsvp-button").forEach(btn=>{
-        btn.addEventListener("click", ()=>{
-            const status = btn.dataset.attendance;
-            attendanceStatus.value = status;
-
-            if(status === "Tham du"){
-                guestCountSection.classList.remove("hidden");
-                guestCountHidden.value = guestCountVisible.value;
-            }else{
-                guestCountSection.classList.add("hidden");
-                guestCountHidden.value = 0;
-                form.dispatchEvent(new Event("submit"));
-            }
-        });
-    });
-
-    guestCountVisible.addEventListener("change", ()=>{
-        guestCountHidden.value = guestCountVisible.value;
-    });
-
-    // Submit RSVP
-    form.addEventListener("submit", async e=>{
-        e.preventDefault();
-
-        const payload = {
-            name: document.getElementById("rsvp-guest-name").value,
-            attending: attendanceStatus.value,
-            quantity: guestCountHidden.value
-        };
-
-        if(!payload.attending){
-            msg.textContent = "Vui lòng chọn Tham dự hoặc Tiếc quá.";
-            msg.classList.remove("hidden");
-            return;
-        }
-
-        msg.classList.add("hidden");
-
-        try{
-            await fetch(SCRIPT_URL,{
-                method:"POST",
-                headers:{"Content-Type":"application/json"},
-                body: JSON.stringify(payload)
-            });
-
-            msg.textContent = "Đã gửi xác nhận! Cảm ơn bạn 💛";
-            msg.classList.remove("hidden");
-
-            setTimeout(()=>{
-                currentPage = 1;
-                updatePages();
-                form.reset();
-                guestCountSection.classList.add("hidden");
-            },2500);
-
-        }catch(e){
-            msg.textContent = "Không gửi được, vui lòng thử lại.";
-            msg.classList.remove("hidden");
-        }
-    });
-
-});
-</script>
-
-</body>
-</html>
+    <div class="floral-header animate-fade-in" style="animation-delay: 0.1s;">
+        <svg class="floral-svg" viewBox="0 0 250 40" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="var(--color-secondary)" stroke-width="0.8">
+            <path d="M5 20 L30 20 C40 20, 45 10, 55 10 C65 10, 70 20, 80 20" stroke-linecap="round"/>
+            <circle cx="50" cy="10" r="2" fill="var(--color-primary)" stroke="none"/>
+            <circle cx="65" cy="15" r="1.5" fill="var(--color-secondary)" stroke="none"/>
+            
+            <path d="M245 20 L220 20 C210 20, 205
