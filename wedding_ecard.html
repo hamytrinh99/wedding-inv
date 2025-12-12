@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trân Trọng Kính Mời</title>
+    <!-- Tải Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Cấu hình Font và Màu sắc gần giống thiết kế -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@100..900&display=swap');
+        
+        :root {
+            /* Màu nền xanh/rêu */
+            --color-primary: #AAB895; 
+            /* Màu chữ/accent */
+            --color-secondary: #4E5848; 
+            /* Màu giấy (off-white) */
+            --color-paper: #F7F7F0; 
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-paper);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .card-container {
+            width: 100%;
+            max-width: 400px; /* Kích thước thiệp mô phỏng */
+            height: 600px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+        .card-page {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px;
+            box-sizing: border-box;
+            color: var(--color-secondary);
+        }
+
+        .card-page.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Trang 1: Mặt trước (Flower) */
+        #page-1 {
+            background-color: var(--color-primary);
+            z-index: 3;
+            transform: translateX(0);
+        }
+
+        /* Trang 2: Mặt trong 1 (Couple Sketch, Date) */
+        #page-2 {
+            background-color: var(--color-paper);
+            z-index: 2;
+            transform: translateX(100%);
+        }
+
+        /* Trang 3: Mặt trong 2 (Map, Timeline, RSVP) */
+        #page-3 {
+            background-color: var(--color-paper);
+            z-index: 1;
+            padding: 15px; /* Giảm padding để có nhiều không gian hơn cho nội dung */
+            transform: translateX(200%);
+            overflow-y: auto; /* Cho phép cuộn nếu nội dung dài */
+        }
+        
+        .visible {
+            transform: translateX(0) !important;
+            opacity: 1 !important;
+        }
+        
+        /* Font cho tiêu đề */
+        .title-font {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Họa tiết ruy băng (simulated ribbon) */
+        .ribbon {
+            width: 40px;
+            height: 80px;
+            background-color: #DDA0DD; /* Màu tím nhạt */
+            border-radius: 50%;
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%) rotate(15deg);
+            opacity: 0.8;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Họa tiết hoa (simulated Hydrangea) */
+        .flower-placeholder {
+            width: 200px;
+            height: 250px;
+            border-radius: 50%;
+            background-color: #C0CDAC; /* Màu xanh nhạt hơn */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 40px 0;
+            border: 2px solid var(--color-secondary);
+            overflow: hidden;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .flower-placeholder svg {
+            width: 80%;
+            height: 80%;
+            opacity: 0.6;
+        }
+
+        .next-button {
+            background-color: var(--color-secondary);
+            color: var(--color-paper);
+            padding: 10px 20px;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .next-button:hover {
+            background-color: #3B443A;
+        }
+
+        /* Animation cho text/element khi load */
+        .animate-fade-in {
+            animation: fadeIn 1s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Style riêng cho RSVP */
+        #rsvp-form label {
+            color: var(--color-secondary);
+            font-weight: 500;
+        }
+        #rsvp-form input, #rsvp-form select {
+            border: 1px solid var(--color-primary);
+            padding: 8px;
+            border-radius: 6px;
+            width: 100%;
+            margin-top: 4px;
+            background-color: var(--color-paper);
+        }
+        .submit-button {
+            background-color: var(--color-primary);
+            color: var(--color-secondary);
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .submit-button:hover {
+            background-color: var(--color-secondary);
+            color: var(--color-paper);
+        }
+    </style>
+    <!-- Tải các thư viện Firebase cần thiết (Bắt buộc trong môi trường Canvas) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Khởi tạo Firebase (Sử dụng biến toàn cục có sẵn trong Canvas)
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        let app, db, auth;
+
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+            
+            // Đăng nhập/Xác thực (Sử dụng token tùy chỉnh nếu có, nếu không thì ẩn danh)
+            const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+            if (initialAuthToken) {
+                signInWithCustomToken(auth, initialAuthToken).catch(console.error);
+            } else {
+                signInAnonymously(auth).catch(console.error);
+            }
+        } catch (error) {
+            console.error("Firebase Initialization Error (Expected if running outside Canvas):", error);
+        }
+    </script>
+</head>
+<body>
+
+<div class="card-container">
+    <div class="ribbon"></div>
+    <div class="absolute inset-0 z-40 bg-white/50 backdrop-blur-sm transition-opacity duration-500 hidden" id="loading-overlay">
+        <div class="flex items-center justify-center h-full flex-col">
+            <svg class="animate-spin -ml-1 mr-3 h-8 w-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p class="mt-2 text-sm text-gray-800 font-medium">Đang gửi phản hồi...</p>
+        </div>
+    </div>
+
+
+    <!-- PAGE 1: MẶT TRƯỚC THIỆP -->
+    <div id="page-1" class="card-page visible justify-around text-center">
+        <h1 class="title-font text-3xl animate-fade-in" style="animation-delay: 0.1s;">Wedding Invitation</h1>
+        
+        <!-- Placeholder cho họa tiết hoa -->
+        <div class="flower-placeholder animate-fade-in" style="animation-delay: 0.5s;">
+            <!-- Simple Hydrangea SVG Placeholder -->
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="var(--color-secondary)" stroke-width="1" class="opacity-50">
+                <circle cx="50" cy="50" r="40" fill="#E8EDE2"/>
+                <path d="M50 10 C50 30, 70 30, 70 50 C70 70, 50 70, 50 90" stroke-linecap="round"/>
+                <path d="M50 10 C50 30, 30 30, 30 50 C30 70, 50 70, 50 90" stroke-linecap="round"/>
+                <path d="M50 50 L50 90" stroke-dasharray="2 2"/>
+                <circle cx="40" cy="40" r="5" fill="var(--color-secondary)" opacity="0.3"/>
+                <circle cx="60" cy="40" r="5" fill="var(--color-secondary)" opacity="0.3"/>
+                <circle cx="50" cy="60" r="5" fill="var(--color-secondary)" opacity="0.3"/>
+            </svg>
+        </div>
+        
+        <div class="mt-auto mb-10 animate-fade-in" style="animation-delay: 1s;">
+            <p class="text-lg tracking-widest font-light">TRÂN TRỌNG KÍNH MỜI</p>
+            <h2 id="guest-name" class="title-font text-4xl mt-1 font-semibold text-white/50" style="text-shadow: 1px 1px 2px var(--color-secondary);">Bạn & Người thân</h2>
+        </div>
+        
+        <p class="text-xs italic mt-auto w-full text-center p-2 bg-black/10 rounded-lg animate-fade-in" style="animation-delay: 1.5s;">"nothing to fear, love is here, together we cheer."</p>
+
+        <button onclick="nextPage()" class="next-button mt-4 animate-fade-in" style="animation-delay: 2s;">Mở Thiệp &gt;</button>
+    </div>
+
+    <!-- PAGE 2: MẶT TRONG 1 (SAVE THE DATE, COUPLE) -->
+    <div id="page-2" class="card-page hidden justify-between text-center">
+        <div class="w-full text-right title-font text-lg font-light text-gray-500">Mặt Trong 1</div>
+        
+        <div class="flex flex-col items-center justify-center h-full">
+            <!-- Phần ngày tháng lớn -->
+            <div class="text-8xl title-font font-bold flex items-center justify-center relative my-4 animate-fade-in">
+                <span class="text-4xl absolute top-10 right-0 transform translate-x-full text-right" style="animation-delay: 0.3s;">28</span>
+                <span class="text-9xl title-font" style="color: var(--color-primary); animation-delay: 0.1s;">01</span>
+            </div>
+            
+            <!-- Placeholder cho họa tiết cặp đôi (simple SVG or text) -->
+            <div class="my-8 w-full max-w-[200px] h-[150px] flex items-center justify-center border-dashed border-2 border-gray-300 rounded-xl bg-gray-50/50 animate-fade-in" style="animation-delay: 0.6s;">
+                <p class="text-sm text-gray-400">Họa tiết Cặp đôi (SVG Placeholder)</p>
+            </div>
+            
+            <h3 class="text-2xl title-font font-light tracking-widest mt-4 animate-fade-in" style="animation-delay: 0.9s;">SAVE THE DATE</h3>
+            <p class="text-sm tracking-wide mt-1 animate-fade-in" style="animation-delay: 1.1s;">OUR WEDDING DAY</p>
+        </div>
+
+        <button onclick="nextPage()" class="next-button mt-auto animate-fade-in" style="animation-delay: 1.5s;">Xem Chi Tiết &gt;</button>
+    </div>
+
+    <!-- PAGE 3: MẶT TRONG 2 (MAP, TIMELINE, DETAILS, RSVP) -->
+    <div id="page-3" class="card-page hidden justify-start items-start text-left">
+        <div class="w-full title-font text-lg font-light text-gray-500 mb-4 text-right">Mặt Trong 2 & RSVP</div>
+        
+        <!-- Map Placeholder -->
+        <div class="w-full h-24 border border-gray-300 bg-gray-100 rounded-lg flex items-center justify-center mb-4 animate-fade-in" style="animation-delay: 0.1s;">
+            <p class="text-xs text-gray-400">Bản đồ (Map Placeholder)</p>
+        </div>
+        
+        <h3 class="title-font text-xl font-medium mb-2 animate-fade-in" style="animation-delay: 0.3s;">Timeline</h3>
+        <ul class="text-sm w-full mb-6 space-y-1 animate-fade-in" style="animation-delay: 0.5s;">
+            <li><span class="font-bold">11:00 AM:</span> Đón khách / Registered Arrival</li>
+            <li><span class="font-bold">11:30 AM:</span> Nghi lễ / Formal Ceremony</li>
+            <li><span class="font-bold">12:00 PM:</span> Tiệc cưới / Wedding Feast</li>
+            <li><span class="font-bold">14:00 PM:</span> Kết thúc / Event Farewell</li>
+        </ul>
+
+        <div class="w-full text-center mb-6">
+            <h2 class="title-font text-2xl font-semibold animate-fade-in" style="animation-delay: 0.7s;">PHẠM TRUNG ĐỨC</h2>
+            <h2 class="title-font text-2xl font-semibold mb-2 animate-fade-in" style="animation-delay: 0.9s;">& TRỊNH THỊ HÀ MY</h2>
+            <p class="text-xs tracking-widest font-light animate-fade-in" style="animation-delay: 1.1s;">28 / 01 / 20XX</p>
+        </div>
+        
+        <!-- Chi tiết Kính mời -->
+        <div class="text-xs mb-6 border-t border-b border-gray-200 py-3 w-full animate-fade-in" style="animation-delay: 1.3s;">
+            <p>Kính mời:</p>
+            <p class="font-medium">Tới dự tiệc cưới để thành hôn cùng gia đình chúng tôi</p>
+            <p class="mt-2">Thứ Ba, 28.01.20XX (Tức: 18.12 AL)</p>
+            <p>Địa điểm: KHÁCH SẠN MELIA HÀ NỘI</p>
+        </div>
+
+        <!-- RSVP Form Section -->
+        <div class="w-full pb-4">
+            <h3 class="title-font text-xl font-medium mb-3 text-center animate-fade-in" style="animation-delay: 1.5s;">Xác Nhận Tham Dự (RSVP)</h3>
+            <form id="rsvp-form" class="space-y-4 animate-fade-in" style="animation-delay: 1.7s;">
+                <!-- Dữ liệu được lấy từ URL nhưng vẫn hiển thị để xác nhận -->
+                <div class="hidden">
+                    <label for="rsvp-guest-name" class="block text-sm">Tên Khách Mời (Tự động điền):</label>
+                    <input type="text" id="rsvp-guest-name" name="entry.123456789" class="p-2 bg-gray-100" readonly>
+                </div>
+
+                <div>
+                    <label for="attendance" class="block text-sm mb-1">Xác nhận tham dự:</label>
+                    <select id="attendance" name="entry.987654321" required>
+                        <option value="">-- Chọn --</option>
+                        <option value="Tham dự">Tham dự</option>
+                        <option value="Không tham dự">Không tham dự</option>
+                        <option value="Đang cân nhắc">Đang cân nhắc</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="guest-count" class="block text-sm mb-1">Số lượng khách đi cùng (bao gồm cả bạn):</label>
+                    <input type="number" id="guest-count" name="entry.555444333" min="1" value="1" required>
+                </div>
+                
+                <div>
+                    <label for="message" class="block text-sm mb-1">Lời chúc/tin nhắn (Tùy chọn):</label>
+                    <textarea id="message" name="entry.111222333" rows="2" class="resize-none"></textarea>
+                </div>
+
+                <button type="submit" class="submit-button w-full p-3 rounded-lg shadow-md">Gửi Xác Nhận</button>
+                <div id="rsvp-message" class="text-center mt-2 text-sm text-green-600 font-semibold hidden"></div>
+            </form>
+        </div>
+
+        <button onclick="prevPage()" class="next-button mt-auto w-full p-2 bg-gray-200 text-gray-600"> &lt; Quay lại</button>
+    </div>
+</div>
+
+<script>
+    const GUEST_NAME_ID = 'guest-name';
+    const GFORM_ENDPOINT = 'https://docs.google.com/forms/d/e/YOUR_GOOGLE_FORM_ID/formResponse'; // THAY THẾ ID FORM CỦA BẠN
+    
+    // --- BƯỚC 1: XỬ LÝ URL & CÁ NHÂN HÓA ---
+    function getGuestNameFromUrl() {
+        const urlParams = new URLSearchParams(window.location.search);
+        let name = urlParams.get('to');
+        
+        // Giải mã URL và thay dấu "+" bằng khoảng trắng
+        if (name) {
+            name = decodeURIComponent(name.replace(/\+/g, ' '));
+        }
+        
+        // Tên mặc định nếu không có parameter 'to'
+        return name || "Bạn & Người thân";
+    }
+
+    function personalizeCard() {
+        const guestName = getGuestNameFromUrl();
+        
+        // Cập nhật tên ở Mặt trước thiệp
+        const nameElement = document.getElementById(GUEST_NAME_ID);
+        if (nameElement) {
+            nameElement.textContent = guestName;
+        }
+
+        // Cập nhật tên trong form RSVP (dùng cho việc gửi data)
+        const rsvpNameInput = document.getElementById('rsvp-guest-name');
+        if (rsvpNameInput) {
+            rsvpNameInput.value = guestName;
+        }
+        
+        // Hướng dẫn người dùng cách gửi link (log ra console)
+        console.log("--- HƯỚNG DẪN GỬI LINK ---");
+        console.log(`Để cá nhân hóa, hãy sử dụng URL có dạng: ${window.location.origin}${window.location.pathname}?to=TÊN_KHÁCH_MỜI`);
+        console.log(`Ví dụ: ${window.location.origin}${window.location.pathname}?to=Nguy%E1%BB%85n%20V%C4%83n%20A`);
+    }
+
+    // --- BƯỚC 2: CHUYỂN TRANG/ANIMATION ---
+    let currentPage = 1;
+    const totalPages = 3;
+
+    const pages = {
+        1: document.getElementById('page-1'),
+        2: document.getElementById('page-2'),
+        3: document.getElementById('page-3')
+    };
+
+    function updatePageVisibility() {
+        for (let i = 1; i <= totalPages; i++) {
+            const page = pages[i];
+            
+            // Xử lý ẩn hiện
+            if (i === currentPage) {
+                page.classList.remove('hidden');
+                setTimeout(() => page.classList.add('visible'), 50); // Thêm visible sau 1 chút để kích hoạt transition
+            } else {
+                page.classList.remove('visible');
+                // Ẩn hoàn toàn sau khi animation kết thúc
+                setTimeout(() => page.classList.add('hidden'), 800); 
+                
+                // Đặt lại vị trí để chuẩn bị cho lần chuyển tiếp theo
+                if (i < currentPage) {
+                    page.style.transform = `translateX(-100%)`; // Quay lại
+                } else {
+                    page.style.transform = `translateX(200%)`; // Tới trước
+                }
+            }
+        }
+    }
+
+    function nextPage() {
+        if (currentPage < totalPages) {
+            currentPage++;
+            updatePageVisibility();
+        }
+    }
+
+    function prevPage() {
+        if (currentPage > 1) {
+            currentPage--;
+            updatePageVisibility();
+        }
+    }
+
+    // --- BƯỚC 3: XỬ LÝ RSVP & GOOGLE SHEET ---
+    document.addEventListener('DOMContentLoaded', () => {
+        personalizeCard();
+        updatePageVisibility(); // Thiết lập trạng thái ban đầu
+
+        const form = document.getElementById('rsvp-form');
+        const messageBox = document.getElementById('rsvp-message');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const submitButton = form.querySelector('button[type="submit"]');
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            loadingOverlay.classList.remove('hidden');
+            loadingOverlay.classList.add('flex');
+            submitButton.disabled = true;
+
+            const formData = new FormData(form);
+            const params = new URLSearchParams();
+            
+            // Lặp qua FormData để tạo tham số URL cho Google Form
+            for (let [key, value] of formData.entries()) {
+                params.append(key, value);
+            }
+            
+            try {
+                // Gửi POST request đến Google Form Endpoint
+                const response = await fetch(GFORM_ENDPOINT, {
+                    method: 'POST',
+                    mode: 'no-cors', // Bắt buộc phải là 'no-cors' khi gửi form đến Google Sheet
+                    body: params
+                });
+
+                // Dù response trả về status 0 ('no-cors'), nếu không có lỗi mạng thì thành công.
+                messageBox.textContent = 'Xác nhận của bạn đã được gửi thành công! Cảm ơn bạn!';
+                messageBox.classList.remove('hidden', 'text-red-600');
+                messageBox.classList.add('text-green-600');
+                form.reset();
+                
+            } catch (error) {
+                console.error("Lỗi khi gửi RSVP:", error);
+                messageBox.textContent = 'Lỗi khi gửi xác nhận. Vui lòng thử lại sau.';
+                messageBox.classList.remove('hidden', 'text-green-600');
+                messageBox.classList.add('text-red-600');
+            } finally {
+                loadingOverlay.classList.add('hidden');
+                loadingOverlay.classList.remove('flex');
+                submitButton.disabled = false;
+            }
+        });
+        
+        // Hướng dẫn cấu hình Google Sheet/Form
+        console.log("--- HƯỚNG DẪN CẤU HÌNH GOOGLE SHEET/FORM ---");
+        console.log("1. Tạo Google Form mới.");
+        console.log("2. Thêm các trường sau: Tên Khách Mời (text), Xác nhận tham dự (dropdown/radio), Số lượng khách đi cùng (number), Lời chúc/tin nhắn (textarea).");
+        console.log("3. Bấm 'Gửi' -> 'Nhúng HTML' (Embed HTML) -> Copy đoạn mã và tìm các trường 'entry.XXXXXXX' tương ứng với mỗi câu hỏi.");
+        console.log("4. THAY THẾ 'YOUR_GOOGLE_FORM_ID' trong GFORM_ENDPOINT và các 'entry.XXXXXXXXX' trong code JavaScript/HTML (phần form) bằng ID thật của bạn.");
+    });
+</script>
+
+</body>
+</html>
